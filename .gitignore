@@ -1,0 +1,10 @@
+
+*.pyc
+*.npy
+*.npy
+*.mat
+*.h5
+*.npy
+*.npy
+*.h5
+classes/Datasets/aramis/aramis_train.csv

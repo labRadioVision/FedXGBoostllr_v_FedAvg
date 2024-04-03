@@ -1,0 +1,35 @@
+mqtt:
+    broker_dir: C:\\Program Files\mosquitto\mosquitto.exe
+    broker_config_file: C:\\Program Files\mosquitto\mosquitto.conf
+    brocker_address: localhost
+    remote: False
+    port: 1883
+params:
+    lr: 0.1
+    optimizer: SGD
+    loss: CategoricalCrossentropy
+    metrics: [CategoricalAccuracy, Precision, Recall, AUC]
+dataset:
+    name: Mnist
+    module: Classes.Datasets.MNIST
+    alpha: 100
+    class: MnistData_manual
+    input_size: [28, 28, 1]
+    num_classes: 10
+    use_all_train_data: False
+fl_params:
+    federation: True
+    architecture: PS_Synch
+    server_waits: False
+    diff_local_epochs: False
+    num_clients: 3
+    clients_selected: 3
+    batch_size: 20
+    num_batches: 3
+    rounds: 10
+    local_epochs: 4
+fl_alg:
+    name: FedAvg
+    alpha_adp: 5
+    mu: 1
+    alpha_dym: 1
