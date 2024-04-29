@@ -204,7 +204,8 @@ print(f"Accuracy (Federated), TPR, TNR: {100*error_fed :.5f} {100*TPR_fed :.5f} 
 
 # saving results
 checkpointpath = 'xgb_models/XGB_federated_model.h5'
-joblib.dump(model_global, checkpointpath, compress=0)
+model_global.save(checkpointpath)
+# joblib.dump(model_global, checkpointpath, compress=0)
 dict_1 = {"Accuracy_centralized": error_centr,
           "TPR_centralized":  TPR_centralized,
           "TNR_centralized":  TNR_centralized,
