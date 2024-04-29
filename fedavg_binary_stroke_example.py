@@ -171,6 +171,9 @@ for c, error in enumerate(errors_clients):
     print(f"Accuracy, TPR, TNR: (Client {c}): {100*error :.5f} {100*TPR_clients[c] :.5f} {100*TNR_clients[c] :.5f}%")
 print(f"Accuracy (Federated), TPR, TNR: {100*error_fed :.5f} {100*TPR_fed :.5f} {100*TNR_fed :.5f}%")
 
+# saving results
+checkpointpath = 'xgb_models/XGB_federated_model.h5'
+joblib.dump(model_global, checkpointpath, compress=0)
 dict_1 = {"Accuracy_centralized": error_centr,
           "TPR_centralized":  TPR_centralized,
           "TNR_centralized":  TNR_centralized,
