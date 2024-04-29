@@ -3,7 +3,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 import numpy as np
 import warnings
-from classes.Datasets.data_loader import load_mnist, load_stroke, load_medmnist
+from classes.Datasets.data_loader import load_mnist, load_stroke, load_medmnist, load_stroke_nprep
 from classes.Datasets.data_partitioner import split_iid, split_label, split_sample, split_feature
 
 import argparse
@@ -12,7 +12,7 @@ import json
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-data',  choices=['mnist', 'stroke'], default='stroke', help = 'Type of data', type=str)
+parser.add_argument('-data',  choices=['mnist', 'stroke', 'stroke_noprep'], default='stroke', help = 'Type of data', type=str)
 parser.add_argument("-niid_type", choices=['iid', 'label', 'sample', 'feature'], default='iid', help="Heterogeneity type", type=str)
 parser.add_argument('-alpha', default=0.5, help=" alpha for non-iid (sigma for noise)", type=float) # small alpha for non-IID
 parser.add_argument('-samples', default=100, help="sets a fixed number samples per device", type=int)
@@ -31,6 +31,9 @@ if __name__ == "__main__":
     elif data == 'stroke':
         print('Loading Stroke')
         x_train, y_train, x_valid, y_valid = load_stroke()
+    elif data == 'stroke_noprep':
+        print('Loading Stroke')
+        x_train, y_train, x_valid, y_valid = load_stroke_nprep()
     elif data == 'medmnist':
         print('Loading MedMNIST')
         x_train, y_train, x_valid, y_valid = load_medmnist()

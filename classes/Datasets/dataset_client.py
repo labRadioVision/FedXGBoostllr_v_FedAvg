@@ -8,10 +8,10 @@ class Dataset:
     def __init__(self, device_index):
         # TODO: pass the folder name as a parameter
         
-        self.x_train_local = np.load(f'data/client_{device_index}/train/x_train.npy')
+        self.x_train_local = np.load(f'data/client_{device_index}/train/x_train.npy', allow_pickle=True)
         self.y_train_local = np.load(f'data/client_{device_index}/train/y_train.npy')
         #print(self.y_train_local)
-        self.x_valid = np.load(f'data/client_{device_index}/valid/x_valid.npy')
+        self.x_valid = np.load(f'data/client_{device_index}/valid/x_valid.npy', allow_pickle=True)
         self.y_valid = np.load(f'data/client_{device_index}/valid/y_valid.npy')
         
         #samp_per_class = np.sum(self.y_train_local, axis=0).astype(int)

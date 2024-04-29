@@ -4,7 +4,7 @@ import xgboost as xgb
 import tensorflow as tf
 import numpy as np
 from classes.Datasets.dataset_client import Dataset
-from classes.Datasets.data_loader import load_mnist, load_stroke
+from classes.Datasets.data_loader import load_mnist, load_stroke, load_stroke_nprep
 from classes.params import simul_param, fl_param
 from utils import get_trees_predictions_xgb, accuracy, load_unsurance
 from models import CNN
@@ -24,13 +24,15 @@ parser.add_argument('-alpha', default=1, help=" alpha for non-iid (sigma for noi
 args = parser.parse_args()
 
 # choose the dataset
-data = "kaggle_stroke"
+data = "kaggle_stroke" # stroke data with SMOTE
+# data = "kaggle_stroke_nprep" # stroke data without SMOTE
 run = args.run
 
-# load the data
+# load the data (only for centralized perf)
 if data == "kaggle_stroke":
     x_train, y_train, x_valid, y_valid = load_stroke()
-    
+elif data == "kaggle_stroke_nprep":
+    x_train, y_train, x_valid, y_valid = load_stroke_nprep()
 # Set number of clients and number of xgboost trees per client
 num_clients = fl_param.NUM_CLIENTS  # K
 trees_client = 15  # M
