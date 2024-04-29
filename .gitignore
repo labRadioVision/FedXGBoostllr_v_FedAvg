@@ -8,3 +8,4 @@
 *.npy
 *.h5
 classes/Datasets/aramis/aramis_train.csv
+.idea/runConfigurations/fedavg_binary_stroke_example.xml

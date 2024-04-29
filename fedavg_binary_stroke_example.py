@@ -4,7 +4,7 @@ import tensorflow.keras as tfk
 import xgboost as xgb
 import numpy as np
 import json
-from classes.Datasets.data_loader import load_mnist, load_stroke
+from classes.Datasets.data_loader import load_mnist, load_stroke, load_stroke_nprep
 from classes.Datasets.dataset_client import Dataset
 from classes.Models.VanillaMLP import VanillaMLP
 from classes.params import simul_param, fl_param
@@ -26,12 +26,15 @@ parser.add_argument('-alpha', default=1, help=" alpha for non-iid (sigma for noi
 args = parser.parse_args()
 
 # choose the dataset
-data = "kaggle_stroke"
+data = "kaggle_stroke" # stroke data with SMOTE
+# data = "kaggle_stroke_nprep" # stroke data without SMOTE
 run = args.run
 
-# load the data
+# load the data (only for centralized perf)
 if data == "kaggle_stroke":
     x_train, y_train, x_valid, y_valid = load_stroke()
+elif data == "kaggle_stroke_nprep":
+    x_train, y_train, x_valid, y_valid = load_stroke_nprep()
 
 # Set number of clients and number of xgboost trees per client
 num_clients = fl_param.NUM_CLIENTS  # K
@@ -48,11 +51,11 @@ E = 4 # local epochs
 model_centralized = VanillaMLP(data_size,1).return_model()  # create a new model
 opt = tfk.optimizers.Adam(learning_rate=0.01, beta_1=0.5, beta_2=0.999)
 model_centralized.compile(optimizer=opt, loss=loss, metrics=metrics)
-x_train = np.array(x_train).astype('float32')
+x_train = np.array(x_train).astype('float32') # this is required for stroke no prep
 model_centralized.fit(
     x_train, y_train, epochs=E_central, verbose=False
 )  # train the model on the client data
-
+x_valid = np.array(x_valid).astype('float32') # this is required for stroke no prep
 model_centralized.evaluate(x_valid, y_valid)  # evaluate the global model
 
 y_hat_c = model_centralized.predict(x_valid)
@@ -96,10 +99,11 @@ for c, (x_train, y_train) in enumerate(
     model_client = VanillaMLP(data_size,1).return_model()  # create a new model
     opt = tfk.optimizers.Adam(learning_rate=0.01, beta_1=0.5, beta_2=0.999)
     model_client.compile(optimizer=opt, loss=loss, metrics=metrics)
-    # x_train = np.array(x_train).astype('float32')
+    x_train = np.array(x_train).astype('float32') # this is required for stroke no prep
     model_client.fit(
         x_train, y_train, epochs=E_central, verbose=False
     )  # train the model on the client data
+    # x_valid = np.array(x_valid).astype('float32') # this is required for stroke no prep
     model_client.evaluate(x_valid, y_valid)  # evaluate the global model
     y_hat_c = model_client.predict(x_valid)
     y_pred = y_hat_c >= 0.5 # binary estimator (CNN model has sigmoid output)
@@ -134,7 +138,7 @@ for r in range(R):  # for each round
         print(f"Round {r + 1}/{R}, Client {c + 1}/{num_clients}")
         model_client = VanillaMLP(data_size,1).return_model()  # local model
         model_client.set_weights(model_global.get_weights())
-        # x_train_c = np.array(x_train_c).astype('float32')
+        x_train_c = np.array(x_train_c).astype('float32') # required for stroke no prep
         opt = tfk.optimizers.Adam(learning_rate=0.01, beta_1=0.5, beta_2=0.999)
         model_client.compile(optimizer=opt, loss=loss, metrics=metrics)
         model_client.fit(
