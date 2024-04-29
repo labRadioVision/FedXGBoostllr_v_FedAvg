@@ -4,3 +4,6 @@
 
 ## FedAvg benchmark
 > fedavg_binary_stroke_example: benchmark FedAvg under same environment (stroke data)
+
+## Note
+add folder xgb_models before running
