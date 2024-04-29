@@ -24,8 +24,8 @@ parser.add_argument('-alpha', default=1, help=" alpha for non-iid (sigma for noi
 args = parser.parse_args()
 
 # choose the dataset
-data = "kaggle_stroke" # stroke data with SMOTE
-# data = "kaggle_stroke_nprep" # stroke data without SMOTE
+# data = "kaggle_stroke" # stroke data with SMOTE
+data = "kaggle_stroke_nprep" # stroke data without SMOTE
 run = args.run
 
 # load the data (only for centralized perf)

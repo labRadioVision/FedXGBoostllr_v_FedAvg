@@ -12,7 +12,7 @@ import json
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-data',  choices=['mnist', 'stroke', 'stroke_noprep'], default='stroke', help = 'Type of data', type=str)
+parser.add_argument('-data',  choices=['mnist', 'stroke', 'stroke_noprep'], default='stroke_noprep', help = 'Type of data', type=str)
 parser.add_argument("-niid_type", choices=['iid', 'label', 'sample', 'feature'], default='iid', help="Heterogeneity type", type=str)
 parser.add_argument('-alpha', default=0.5, help=" alpha for non-iid (sigma for noise)", type=float) # small alpha for non-IID
 parser.add_argument('-samples', default=100, help="sets a fixed number samples per device", type=int)
