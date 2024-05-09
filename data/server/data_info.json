@@ -1,1 +1,1 @@
-{"input_shape": [27], "num_classes": 1, "data": "stroke_noprep", "niid_type": "iid", "alpha": 0.5}
+{"input_shape": [10], "num_classes": 1, "data": "kaggle_stroke", "niid_type": "iid", "alpha": 1}

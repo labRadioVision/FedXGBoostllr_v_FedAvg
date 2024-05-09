@@ -8,7 +8,6 @@ from classes.params import fl_param, simul_param
 
 
 def split_iid(x, y, args, type='train'):
-
     if fl_param.ALL_DATA or type == 'valid':
         local_size = len(x) // fl_param.NUM_CLIENTS
     else:
@@ -28,7 +27,28 @@ def split_iid(x, y, args, type='train'):
         np.save(dir + f'y_{type}.npy', y_part)
     print(f'Saved {type} data')
     
-    
+
+def split_iid_sim(x, y, samples, type='train'):
+    if fl_param.ALL_DATA or type == 'valid':
+        local_size = len(x) // fl_param.NUM_CLIENTS
+    else:
+        local_size = samples
+
+    for i in range(fl_param.NUM_CLIENTS):
+        dir = f'data/client_{i}/{type}/'
+        os.makedirs(dir, exist_ok=True)
+        
+        start_index = i * local_size
+        end_index = (i + 1) * local_size
+        x_part = x[start_index:end_index]
+        y_part = y[start_index:end_index]
+        
+        print('Client {}: KL Divergence: {:.4f} | Wasserstein Distance: {:.4f} | Samples {}'.format(i, kl_divergence(y_part, y), w_distance(y_part, y), len(y_part)))
+        np.save(dir + f'x_{type}.npy', x_part)
+        np.save(dir + f'y_{type}.npy', y_part)
+    print(f'Saved {type} data')
+  
+
 def split_label(x, y, args):
     #min_require_size = samples if samples is not None else 25
     min_require_size = 50    
