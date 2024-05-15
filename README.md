@@ -1,4 +1,8 @@
-### Federated data: create a federated dataset and distribute to clients 
+## Notebook (example) 
+
+note_fedxgboost.ipynb
+
+## Federated data: create a federated dataset and distribute to clients 
 ```python
 python -m classes.Datasets.data_generator -data $data -samples $samples -data $data -niid $n_iid -alpha 0.1
 $data choices=['stroke'], default='stroke', help = 'Type of data',
