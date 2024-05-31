@@ -28,13 +28,13 @@ def split_iid(x, y, args, type='train'):
     print(f'Saved {type} data')
     
 
-def split_iid_sim(x, y, samples, type='train'):
-    if fl_param.ALL_DATA or type == 'valid':
-        local_size = len(x) // fl_param.NUM_CLIENTS
+def split_iid_sim(x, y, samples, clients, type='train'):
+    if type == 'valid':
+        local_size = len(x) // clients
     else:
         local_size = samples
 
-    for i in range(fl_param.NUM_CLIENTS):
+    for i in range(clients):
         dir = f'data/client_{i}/{type}/'
         os.makedirs(dir, exist_ok=True)
         
