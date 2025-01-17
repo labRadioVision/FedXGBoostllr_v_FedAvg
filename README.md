@@ -11,10 +11,10 @@ $n_iid choices=['iid', 'sample'], default='iid', help="Heterogeneity type"
 NOTE: stroke dataset can be shared upon request
 ```
 ## FedXGBoost with learnable learning rates 
-> xgboost_binary_stroke_example: fedXGBoostllr with stroke data
+> xgboost_binary_stroke_example: fedXGBoostllr with stroke data NOTE:you must use data_generator first to distribute the data to clients
 
 ## FedAvg benchmark
-> fedavg_binary_stroke_example: benchmark FedAvg under same environment (stroke data)
+> fedavg_binary_stroke_example: benchmark FedAvg under same environment (stroke data) NOTE:you must use data_generator first to distribute the data to clients
 
 ## FedXGBoost adapted for regression problem
 > fedxgboost_regressor: regression example using the synthetic scikit learn dataset
