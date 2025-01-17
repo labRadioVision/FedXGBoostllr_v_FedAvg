@@ -43,7 +43,7 @@ def split_iid_sim(x, y, samples, clients, type='train'):
         x_part = x[start_index:end_index]
         y_part = y[start_index:end_index]
         
-        print('Client {}: KL Divergence: {:.4f} | Wasserstein Distance: {:.4f} | Samples {}'.format(i, kl_divergence(y_part, y), w_distance(y_part, y), len(y_part)))
+        print('Client {} | Samples {}'.format(i, len(y_part)))
         np.save(dir + f'x_{type}.npy', x_part)
         np.save(dir + f'y_{type}.npy', y_part)
     print(f'Saved {type} data')

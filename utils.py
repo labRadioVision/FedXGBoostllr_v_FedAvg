@@ -99,7 +99,7 @@ def get_basescore(model):
     return base_score
 
 
-def get_trees_predictions_xgb(X, objective, *models):
+def get_trees_predictions_xgb(X, objective, *models, numclasses = None):
     """
     Get predictions for each tree in each model.
     Alternatively:
@@ -113,14 +113,18 @@ def get_trees_predictions_xgb(X, objective, *models):
         )
     """
     xm = xgb.DMatrix(X, base_margin=np.zeros(len(X), dtype=np.float32))
-
+    #for model in models:
+    #    for booster in model.get_booster():
+    #        a = booster.predict(xm)
     trees_predictions = np.array(
         [booster.predict(xm) for model in models for booster in model.get_booster()]
     ).T
 
     if objective == "binary":
         trees_predictions = trees_predictions >= 0.5  # hard margin inputs
-
+    elif objective == "multiclass":
+        # trees_predictions = np.rint(trees_predictions)
+        trees_predictions = np.clip(trees_predictions, 0, numclasses - 1)
     return trees_predictions  # shape (n_samples, n_trees * n_models)
 
 

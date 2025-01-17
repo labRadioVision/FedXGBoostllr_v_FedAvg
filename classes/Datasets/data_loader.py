@@ -4,7 +4,7 @@ import tensorflow as tf
 import  tensorflow.keras.datasets as tfds
 import numpy as np
 import pandas as pd
-
+from sklearn import datasets
 import medmnist
 import numpy as np
 from medmnist import INFO
@@ -12,6 +12,23 @@ import itertools
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
+
+def load_iris():
+    iris = datasets.load_iris()
+    X = iris.data
+    y = iris.target
+    x_train, x_valid,  y_train, y_valid = train_test_split(X, y, test_size=0.5, random_state=42)
+    return x_train, y_train, x_valid, y_valid
+
+def load_random():
+    X, y = datasets.make_classification(n_samples=1000, n_features=10, n_informative=5, n_redundant=5, n_classes=4)
+    x_train, x_valid,  y_train, y_valid = train_test_split(X, y, test_size=0.4, random_state=42)
+    return x_train, y_train, x_valid, y_valid
+
+def load_random_regression():
+    X, y = datasets.make_regression(n_samples=1000, n_features=10, n_informative=7, n_targets=1)
+    x_train, x_valid,  y_train, y_valid = train_test_split(X, y, test_size=0.4, random_state=42)
+    return x_train, y_train, x_valid, y_valid
 
 def load_mnist():
     # load the dataset
