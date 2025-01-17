@@ -16,5 +16,11 @@ NOTE: stroke dataset can be shared upon request
 ## FedAvg benchmark
 > fedavg_binary_stroke_example: benchmark FedAvg under same environment (stroke data)
 
+## FedXGBoost adapted for regression problem
+> fedxgboost_regressor: regression example using the synthetic scikit learn dataset
+
+## FedXGBoost adapted for multiclass classification problem
+> fedxgboost_multiclass_v2: multi class classification example using the synthetic scikit learn dataset
+
 ## Note
 add folder xgb_models before running
