@@ -122,9 +122,9 @@ def get_trees_predictions_xgb(X, objective, *models, numclasses = None):
 
     if objective == "binary":
         trees_predictions = trees_predictions >= 0.5  # hard margin inputs
-    elif objective == "multiclass":
+    elif objective == "multiclass": # only for regression inputs
         # trees_predictions = np.rint(trees_predictions)
-        trees_predictions = np.clip(trees_predictions, 0, numclasses - 1)
+        trees_predictions = np.clip(trees_predictions, 0, numclasses - 1)   
     return trees_predictions  # shape (n_samples, n_trees * n_models)
 
 
