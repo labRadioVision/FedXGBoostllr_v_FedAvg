@@ -1,5 +1,5 @@
-## Notebook (example) 
-Start from notebook (install requirements.txt with python 3.8 (3.8.19 tested)
+## Notebook (example)
+Start from notebook (install requirements.txt with python 3.8 (3.8.18, 3.8.19, 3.8.20 tested)
 note_fedxgboost.ipynb
 
 ## Federated data: create a federated dataset and distribute to clients 
