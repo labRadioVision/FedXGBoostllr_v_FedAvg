@@ -214,9 +214,9 @@ print(f"MSE (Federated): {error_fed :.2f}")
 checkpointpath = 'xgb_models/XGB_federated_model_regression.h5'
 model_global.save(checkpointpath)
 # joblib.dump(model_global, checkpointpath, compress=0)
-dict_1 = {"Accuracy_centralized": error_centr,
-          "Accuracy_clients": errors_clients,
-          "Accuracy_federation": error_fed,
+dict_1 = {"MSE_centralized": error_centr,
+          "MSE_clients": errors_clients,
+          "MSE_federation": error_fed,
           }
 sio.savemat(
     "results/fedXGboost_regression.mat", dict_1)

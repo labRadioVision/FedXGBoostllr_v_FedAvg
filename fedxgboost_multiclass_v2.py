@@ -115,8 +115,7 @@ hyperparams = {
 }
 
 errors_clients = []
-TPR_clients = []
-TNR_clients = []
+
 for c, (x_train, y_train) in enumerate(
         datasets
 ):  # extract the dataset for the current client
