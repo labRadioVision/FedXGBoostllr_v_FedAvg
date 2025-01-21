@@ -182,15 +182,25 @@ for c in range(num_clients):
         XGB_models.append(classifiers [q])
 
 # prepare the new dataset for training
-objective = "binary" # "onevsall" applies a tanh activation to the xgboost tree outputs 
+objective = "binary" 
+objective = "soft" # applies a tanh activation to the xgboost tree outputs 
 # works also with "binary" where outputs of xgboost trees are binarized, binary option seems working slightly better but unclear
+reshape_enabled = True # disable or enable the reshaping of xgboost outputs
+
+if reshape_enabled:
+    filter_size = trees_client
+else:
+    filter_size = trees_client * num_classes # CNN filter size equal to the number of trees per client * number of classes (if > 2)
+
+filters = 32 # convolutional filters (16, 32 ok, >32 too large, depends on tree structures) TO BE OPTIMIZED
+
 x_xgb_trees_out = []
 y_xgb_trees_out = []
 for c, (x_train, y_train) in enumerate(datasets):  # for each client
     print("Converting the data of client", c, 100 * "-")
     # XGB trees outputs (for all XGBoost trees!) corresponding to training data of client c
     # NOTE: numclasses is needed to clip the inputs
-    x_xgb_trees_out.append(get_trees_predictions_xgb(x_train, objective, *XGB_models, numclasses=num_classes)) 
+    x_xgb_trees_out.append(get_trees_predictions_xgb(x_train, objective, *XGB_models, numclasses=num_classes, reshape_enabled=reshape_enabled)) 
     categorical_labels = np.squeeze(np.eye(num_classes)[y_train.reshape(-1)])
     y_xgb_trees_out.append(categorical_labels) # true labels now categorical
 
@@ -198,11 +208,8 @@ datasets_out = tuple(zip(x_xgb_trees_out, y_xgb_trees_out)) # dataset_out is the
 
 # Validation data
 
-xgb_valid_out = get_trees_predictions_xgb(x_valid, objective, *XGB_models, numclasses=num_classes) # XGB trees outputs corresponding to validation data: to simplify the reasoning, we apply same validation set for all (other options are also feasible)
+xgb_valid_out = get_trees_predictions_xgb(x_valid, objective, *XGB_models, numclasses=num_classes, reshape_enabled=reshape_enabled) # XGB trees outputs corresponding to validation data: to simplify the reasoning, we apply same validation set for all (other options are also feasible)
 
-
-filters = 32 # convolutional filters (16, 32 ok, >32 too large, depends on tree structures) TO BE OPTIMIZED
-filter_size = trees_client * num_classes # CNN filter size MUST BE equal to the number of trees per client
 
 params_cnn = (num_clients, filter_size, trees_client, filters, num_classes)
 models_clients = []  # list of models

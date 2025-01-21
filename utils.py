@@ -99,7 +99,7 @@ def get_basescore(model):
     return base_score
 
 
-def get_trees_predictions_xgb(X, objective, *models, numclasses = None):
+def get_trees_predictions_xgb(X, objective, *models, numclasses = None, reshape_enabled = None):
     """
     Get predictions for each tree in each model.
     Alternatively:
@@ -119,18 +119,25 @@ def get_trees_predictions_xgb(X, objective, *models, numclasses = None):
     trees_predictions = np.array(
         [booster.predict(xm) for model in models for booster in model.get_booster()]
     ).T
-    
+    if numclasses is not None and reshape_enabled is True:
+        # reshape (filter size = number of trees per client)
+        trees_predictions = trees_predictions.transpose()
+        trees_predictions = np.reshape(trees_predictions, (numclasses,int(trees_predictions.shape[0]/numclasses), trees_predictions.shape[1]))
+        reordered_arr = np.transpose(trees_predictions, axes=[1, 0, 2])
+        trees_predictions = np.reshape(reordered_arr,(trees_predictions.shape[0]*trees_predictions.shape[1],trees_predictions.shape[2]))
+        trees_predictions = trees_predictions.transpose()
+
     if objective == "binary":
         trees_predictions = trees_predictions >= 0.5  # hard margin inputs
     elif objective == "multiclass": # only for regression inputs
         # trees_predictions = np.rint(trees_predictions)
         trees_predictions = np.clip(trees_predictions, 0, numclasses - 1)   
-    elif objective == "onevsall":
-        ampl_f = 5
+    elif objective == "soft":
+        ampl_f = 10
         for k in range(trees_predictions.shape[0]):
             # trees_predictions[k,:] = ampl_f*(trees_predictions[k,:]-0.5)
-            trees_predictions[k,:] = np.tanh(ampl_f*(trees_predictions[k,:]-0.5))    
-    return trees_predictions  # shape (n_samples, n_trees * n_models)
+            trees_predictions[k,:] = np.tanh(ampl_f*(trees_predictions[k,:]-0.5))            
+    return trees_predictions  
 
 
 def get_trees_predictions_rf(X, objective, *models):

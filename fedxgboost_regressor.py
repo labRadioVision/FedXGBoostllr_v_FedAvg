@@ -16,12 +16,6 @@ import scipy.io as sio
 import joblib
 import argparse
 import warnings
-# loading the iris dataset
-#iris = datasets.load_iris()
-
-# X -> features, y -> label
-#X = iris.data
-#y = iris.target
 
 # dividing X, y into train and test data
 # x_train, x_valid,  y_train, y_valid = train_test_split(X, y, test_size=0.5, random_state=42)
