@@ -119,12 +119,17 @@ def get_trees_predictions_xgb(X, objective, *models, numclasses = None):
     trees_predictions = np.array(
         [booster.predict(xm) for model in models for booster in model.get_booster()]
     ).T
-
+    
     if objective == "binary":
         trees_predictions = trees_predictions >= 0.5  # hard margin inputs
     elif objective == "multiclass": # only for regression inputs
         # trees_predictions = np.rint(trees_predictions)
         trees_predictions = np.clip(trees_predictions, 0, numclasses - 1)   
+    elif objective == "onevsall":
+        ampl_f = 5
+        for k in range(trees_predictions.shape[0]):
+            # trees_predictions[k,:] = ampl_f*(trees_predictions[k,:]-0.5)
+            trees_predictions[k,:] = np.tanh(ampl_f*(trees_predictions[k,:]-0.5))    
     return trees_predictions  # shape (n_samples, n_trees * n_models)
 
 

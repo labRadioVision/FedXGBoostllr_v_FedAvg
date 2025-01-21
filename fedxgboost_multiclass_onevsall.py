@@ -7,7 +7,7 @@ import tensorflow as tf
 from tensorflow.keras import backend as K
 import numpy as np
 from classes.Datasets.dataset_client import Dataset
-from classes.Datasets.data_loader import load_iris, load_random
+from classes.Datasets.data_loader import load_random
 from classes.params import simul_param, fl_param
 from utils import get_trees_predictions_xgb, accuracy, load_unsurance
 from models import CNN_mc
@@ -182,7 +182,8 @@ for c in range(num_clients):
         XGB_models.append(classifiers [q])
 
 # prepare the new dataset for training
-objective = "binary"
+objective = "binary" # "onevsall" applies a tanh activation to the xgboost tree outputs 
+# works also with "binary" where outputs of xgboost trees are binarized, binary option seems working slightly better but unclear
 x_xgb_trees_out = []
 y_xgb_trees_out = []
 for c, (x_train, y_train) in enumerate(datasets):  # for each client
