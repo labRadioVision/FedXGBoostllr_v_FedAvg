@@ -1,7 +1,9 @@
 ## Notebook (example)
 Start from notebooks (install requirements.txt with python 3.8 (3.8.18, 3.8.19, 3.8.20 tested)
 > note_fedxgboost_stroke_binary_classification.ipynb: fedXGBoostllr for binary classification, tested with stroke data
+
 > note_fedxgboost_multiclass.ipynb: fedXGBoostllr for multiclass classification, tested with scikit learn synthetic datasets
+ 
 > note_fedxgboost_regression.ipynb: fedXGBoostllr for regression, tested with scikit learn synthetic datasets
 
 ## Federated data: create a federated dataset and distribute to clients 
