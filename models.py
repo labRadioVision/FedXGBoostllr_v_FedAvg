@@ -40,23 +40,39 @@ def CNN(num_clients, trees_client, n_channels, objective, n_classes=None):
 def CNN_mc(num_clients, filter_size, trees_client, n_channels, n_classes):
     # Define 1D-CNN
     model = tfk.models.Sequential()
-    model.add(
+    if n_classes == 2:
+        model.add(
+        tfk.layers.Conv1D(
+            n_channels,
+            kernel_size=filter_size,
+            strides=trees_client,
+            activation="relu",
+            input_shape=(num_clients * trees_client, 1),
+            )
+        )
+    else:
+        model.add(
         tfk.layers.Conv1D(
             n_channels,
             kernel_size=filter_size,
             strides=trees_client,
             activation="relu",
             input_shape=(num_clients * trees_client * n_classes, 1),
+            )
         )
-    )
 
     model.add(tfk.layers.Flatten())
     model.add(tfk.layers.Dense(n_channels * num_clients, activation="relu"))
 
     # Output layer
-    model.add(tfk.layers.Dense(n_classes, activation="softmax"))
-    loss = "categorical_crossentropy"
-    metrics = ["accuracy"]
+    if n_classes == 2:
+        model.add(tfk.layers.Dense(1, activation="sigmoid"))
+        loss = "binary_crossentropy"
+        metrics = ["accuracy"]
+    else:
+        model.add(tfk.layers.Dense(n_classes, activation="softmax"))
+        loss = "categorical_crossentropy"
+        metrics = ["accuracy"]
     # Compile the model
 
     opt = tfk.optimizers.Adam(learning_rate=0.01, beta_1=0.5, beta_2=0.999)
