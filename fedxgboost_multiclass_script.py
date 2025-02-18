@@ -9,7 +9,7 @@ warnings.filterwarnings("ignore")
 parser = argparse.ArgumentParser()
 parser.add_argument('-reshape', default=False, help="reshape", type=bool)
 parser.add_argument('-inputs', default="soft", help=" or binary ", type=str)
-parser.add_argument('-num_clients', default=10, help="clients", type=int)
+parser.add_argument('-num_clients', default=4, help="clients", type=int)
 
 args = parser.parse_args()
 
@@ -21,9 +21,9 @@ test_size = 0.4 # fraction of data used for validation
 training_samples = 1000
 
 num_clients = args.num_clients  # number of FL clients
-trees_client = 10  # number of xgboost trees per client
+trees_client = 50  # number of xgboost trees per client
 samples = round(training_samples/num_clients) # number of training examples per client
-
+ 
 # load the dataset
 with open(f"dataset/dataset_{num_classes}_redundant_{n_redundant}.pkl", 'rb') as f:
     x_train, x_valid,  y_train, y_valid = pickle.load(f)
@@ -39,7 +39,7 @@ import numpy as np
 hyperparams = {
     "objective": "multi:softmax",
     # Same number of trees as in the decentralized case
-    "n_estimators": num_clients * trees_client,
+    "n_estimators": trees_client,
     "max_depth": 5,
     "learning_rate": 0.1,
     "base_score": 0.5,
