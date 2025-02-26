@@ -15,7 +15,7 @@ args = parser.parse_args()
 
 num_classes = 4 # number of classes (>2)
 n_features = 50 # number of features
-n_redundant = 35 # redundant features
+n_redundant = 5 # redundant features
 n_informative = n_features - n_redundant # informative features
 test_size = 0.4 # fraction of data used for validation
 training_samples = 1000
