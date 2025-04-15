@@ -9,11 +9,11 @@ warnings.filterwarnings("ignore")
 parser = argparse.ArgumentParser()
 parser.add_argument('-reshape', default=False, help="reshape", type=bool)
 parser.add_argument('-inputs', default="soft", help=" or binary ", type=str)
-parser.add_argument('-num_clients', default=4, help="clients", type=int)
+parser.add_argument('-num_clients', default=10, help="clients", type=int)
 
 args = parser.parse_args()
 
-num_classes = 4 # number of classes (>2)
+num_classes = 2 # number of classes (>2)
 n_features = 50 # number of features
 n_redundant = 5 # redundant features
 n_informative = n_features - n_redundant # informative features
@@ -21,7 +21,7 @@ test_size = 0.4 # fraction of data used for validation
 training_samples = 1000
 
 num_clients = args.num_clients  # number of FL clients
-trees_client = 50  # number of xgboost trees per client
+trees_client = 10  # number of xgboost trees per client
 samples = round(training_samples/num_clients) # number of training examples per client
  
 # load the dataset
@@ -142,7 +142,7 @@ for c, (x_train, y_train) in enumerate(
     print(f"xgboost classifier local model accuracy, (Client {c}): {100*error :.5f}%")
     errors_clients.append(error)
 
-    ################################# INDIVIDUAL CLIENTS XGBOOST REGRESSION MODEL TRAINING)
+    ################################# INDIVIDUAL CLIENTS XGBOOST MODEL TRAINING)
 from sklearn.multiclass import OneVsRestClassifier
 
 # Hyperparameters for each of the clients
@@ -174,6 +174,8 @@ for c, (x_train, y_train) in enumerate(
     cm = confusion_matrix(y_valid, y_pred)
     print(f"One vs all local model accuracy, (Client {c}): {100*error :.5f}%")
 
+#Create a new "dataset" input to 1D-CNN which consists of the outputs of the XGB trees models previously trained (locally):
+#NOTE: During initialization, all xgboost models (of all clients) must be shared with all clients before starting the FL process. MQTT can be used for this (but also other methods apply). In the following xgboost base models are loaded from a shared folder. 
 
 from utils import get_trees_predictions_xgb
 
@@ -241,7 +243,7 @@ num_layers = len(model_global.get_weights())
 
 model_global.summary()
 
-R = 25  # global FL rounds
+R = 15  # global FL rounds
 E = 10  # local epochs
 
 print(f"Round 0/{R}")  # init model
@@ -277,10 +279,13 @@ for r in range(R):  # for each round
 
     model_global.evaluate(xgb_valid_out, categorical_y_valid)  # evaluate the global model
 
-    import scipy.io as sio
+import scipy.io as sio
 
 y_hat_xgb = model_global.predict(xgb_valid_out)
-y_hat_xgb_cont = np.argmax(y_hat_xgb, axis=1)
+if num_classes == 2:
+    y_hat_xgb_cont = y_hat_xgb >= 0.5 # binary estimator (CNN model has sigmoid output)
+else:
+    y_hat_xgb_cont = np.argmax(y_hat_xgb, axis=1)
 accuracy_fed = accuracy_score(y_valid, y_hat_xgb_cont)
 cm = confusion_matrix(y_valid, y_hat_xgb_cont)
 
