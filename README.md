@@ -1,4 +1,4 @@
-## Notebooks
+## Notebooks/start
 Start from notebooks (install requirements.txt with python 3.8 (3.8.18, 3.8.19, 3.8.20 tested)
 > note_fedxgboost_multiclass.ipynb: fedXGBoostllr for multiclass classification (binary and multiclass), tested with scikit learn synthetic datasets
 > fedxgboost_multiclass_script.py: same as above in a script file
